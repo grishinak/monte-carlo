@@ -4,49 +4,49 @@
 #include <vector>
 #include <atomic>
 
-// Функция для подсчета точек внутри круга
 int countPointsInsideCircle(int totalPoints) {
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_real_distribution<> dis(-1.0, 1.0);
+    std::random_device rd; // объект для генерации случайных чисел
+    std::mt19937 gen(rd()); // генератор псевдослучайных чисел
+    std::uniform_real_distribution<> dis(-1.0, 1.0); // равномерное распределение от -1 до 1.(квадрат. сторона = 2, площадь = 4)
     
-    int insideCircle = 0;
-    for (int i = 0; i < totalPoints; ++i) {
-        double x = dis(gen);
-        double y = dis(gen);
-        if (x * x + y * y <= 1.0) {
-            insideCircle++;
+    int insideCircle = 0; 
+    for (int i = 0; i < totalPoints; ++i) { 
+        double x = dis(gen); 
+        double y = dis(gen); 
+        if (x * x + y * y <= 1.0) { // Проверяем, попадает ли точка внутрь круга.(радиус = 1, площадь = π)
+            insideCircle++; 
         }
     }
-    return insideCircle;
+    return insideCircle; 
 }
 
 int main(int argc, char *argv[]) {
-    if (argc != 2) {
-        std::cerr << "Usage: " << argv[0] << " <number of threads>\n";
-        return 1;
+    if (argc != 2) { // Проверяем, передано ли правильное количество аргументов командной строки
+        std::cerr << "Usage: " << argv[0] << " <number of threads>\n"; 
+        return 1; 
     }
     
-    int numThreads = std::stoi(argv[1]);
-    int totalPoints = 1000000; // Общее количество точек
+    int numThreads = std::stoi(argv[1]); 
+    int totalPoints = 1000000; // Общее количество точек для генерации
     
-    int pointsPerThread = totalPoints / numThreads;
-    std::atomic<int> totalInsideCircle(0);
+    int pointsPerThread = totalPoints / numThreads; // Количество точек для генерации в каждом потоке
+    std::atomic<int> totalInsideCircle(0); 
     
-    std::vector<std::thread> threads;
-    for (int i = 0; i < numThreads; ++i) {
-        threads.emplace_back([&]() {
-            int insideCircle = countPointsInsideCircle(pointsPerThread);
-            totalInsideCircle += insideCircle;
+    std::vector<std::thread> threads; 
+    for (int i = 0; i < numThreads; ++i) { 
+        threads.emplace_back([&]() { 
+            int insideCircle = countPointsInsideCircle(pointsPerThread); 
+            totalInsideCircle += insideCircle; 
         });
     }
     
-    for (auto& t : threads) {
+    for (auto& t : threads) { // Ждем завершения всех потоков
         t.join();
     }
     
-    double pi = 4.0 * totalInsideCircle / totalPoints;
-    std::cout << "Estimated value of Pi: " << pi << std::endl;
+    double pi = 4.0 * totalInsideCircle / totalPoints; // Вычисляем оценку числа π. (S квадрата = 4.0)
+    std::cout << "Estimated value of Pi: " << pi << std::endl; 
     
-    return 0;
+    return 0; 
 }
+
