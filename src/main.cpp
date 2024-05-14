@@ -5,24 +5,9 @@
 #include <thread>
 #include <vector>
 
-int countPointsInsideCircle(int totalPoints) {
-  std::random_device rd;  // объект для генерации случайных чисел
-  std::mt19937 gen(rd());  // генератор псевдослучайных чисел
-  std::uniform_real_distribution<> dis(
-      -1.0,
-      1.0);  // равномерное распределение от -1 до 1 (квадрат. сторона = 2, площадь = 4)
+/*Результат многократного запуска подсчёта с заданным количеством точек содержится в README.md*/
 
-  int insideCircle = 0;
-  for (int i = 0; i < totalPoints; ++i) {
-    double x = dis(gen);
-    double y = dis(gen);
-    if (x * x + y * y <=
-        1.0) {  // Проверяем, попадает ли точка внутрь круга (радиус = 1, площадь = π)
-      insideCircle++;
-    }
-  }
-  return insideCircle;
-}
+int countPointsInsideCircle(int totalPoints);
 
 int main(int argc, char* argv[]) {
   if (argc !=
@@ -66,4 +51,23 @@ int main(int argc, char* argv[]) {
             << std::endl;
 
   return 0;
+}
+
+int countPointsInsideCircle(int totalPoints) {
+  std::random_device rd;  // объект для генерации случайных чисел
+  std::mt19937 gen(rd());  // генератор псевдослучайных чисел
+  std::uniform_real_distribution<> dis(
+      -1.0,
+      1.0);  // равномерное распределение от -1 до 1 (квадрат. сторона = 2, площадь = 4)
+
+  int insideCircle = 0;
+  for (int i = 0; i < totalPoints; ++i) {
+    double x = dis(gen);
+    double y = dis(gen);
+    if (x * x + y * y <=
+        1.0) {  // Проверяем, попадает ли точка внутрь круга (радиус = 1, площадь = π)
+      insideCircle++;
+    }
+  }
+  return insideCircle;
 }
