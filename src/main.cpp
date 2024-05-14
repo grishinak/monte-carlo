@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) {
     }
     
     int numThreads = std::stoi(argv[1]); 
-    int totalPoints = 1000000; // Общее количество точек для генерации
+    const int totalPoints = 1000000; // Общее количество точек для генерации
     
     int pointsPerThread = totalPoints / numThreads; // Количество точек для генерации в каждом потоке
     std::atomic<int> totalInsideCircle(0); 
