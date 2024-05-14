@@ -1,4 +1,5 @@
 #include <atomic>
+#include <chrono>
 #include <iostream>
 #include <random>
 #include <thread>
@@ -9,14 +10,14 @@ int countPointsInsideCircle(int totalPoints) {
   std::mt19937 gen(rd());  // генератор псевдослучайных чисел
   std::uniform_real_distribution<> dis(
       -1.0,
-      1.0);  // равномерное распределение от -1 до 1.(квадрат. сторона = 2, площадь = 4)
+      1.0);  // равномерное распределение от -1 до 1 (квадрат. сторона = 2, площадь = 4)
 
   int insideCircle = 0;
   for (int i = 0; i < totalPoints; ++i) {
     double x = dis(gen);
     double y = dis(gen);
     if (x * x + y * y <=
-        1.0) {  // Проверяем, попадает ли точка внутрь круга.(радиус = 1, площадь = π)
+        1.0) {  // Проверяем, попадает ли точка внутрь круга (радиус = 1, площадь = π)
       insideCircle++;
     }
   }
@@ -46,13 +47,23 @@ int main(int argc, char* argv[]) {
     });
   }
 
+  auto start = std::chrono::high_resolution_clock::
+      now();  // Засекаем время начала выполнения
+
   for (auto& t : threads) {  // Ждем завершения всех потоков
     t.join();
   }
 
+  auto end = std::chrono::high_resolution_clock::
+      now();  // Засекаем время окончания выполнения
+  std::chrono::duration<double> elapsed_seconds =
+      end - start;  // Вычисляем время выполнения программы
+
   double pi = 4.0 * totalInsideCircle /
               totalPoints;  // Вычисляем оценку числа π. (S квадрата = 4.0)
   std::cout << "Estimated value of Pi: " << pi << std::endl;
+  std::cout << "Time taken: " << elapsed_seconds.count() << " seconds"
+            << std::endl;
 
   return 0;
 }
